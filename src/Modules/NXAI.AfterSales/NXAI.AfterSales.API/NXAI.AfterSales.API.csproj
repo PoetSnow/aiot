@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\..\..\Shared\NXAI.Shared.WebApi\NXAI.Shared.WebApi.csproj" />
+    <ProjectReference Include="..\NXAI.AfterSales.Application.Contracts\NXAI.AfterSales.Application.Contracts.csproj" />
+  </ItemGroup>
+</Project>

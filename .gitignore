@@ -1,0 +1,70 @@
+# This repo is the NXAI backend only. Frontend lives in ../client and has its own git.
+
+# Frontend (keep out if the folder is copied back)
+/client/
+
+# Build
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Aa]rtifacts/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.pubxml
+*.pubxml.user
+*.rsuser
+
+# NuGet
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+# Test / coverage
+[Tt]est[Rr]esult*/
+[Cc]overage*/
+*.coverage
+*.coveragexml
+
+# Logs
+txtlogs/
+*.diff
+nlog-internal*.txt
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+!.env.apps.example
+!deploy/.env.infra.example
+/.env/adnc
+appsettings.*.local.json
+*.pfx
+*.p12
+*.key
+secrets.json
+
+# Tooling
+.sonarqube
+.sonarlint
+/.codex
+/README.html

@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Description>NXAI modular monolith host</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\NXAI.Shared.WebApi\NXAI.Shared.WebApi.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.System\NXAI.System.API\NXAI.System.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Member\NXAI.Member.API\NXAI.Member.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Member\NXAI.Member.Application\NXAI.Member.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Asset\NXAI.Asset.API\NXAI.Asset.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Asset\NXAI.Asset.Application\NXAI.Asset.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.AfterSales\NXAI.AfterSales.API\NXAI.AfterSales.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.AfterSales\NXAI.AfterSales.Application\NXAI.AfterSales.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Device\NXAI.Device.API\NXAI.Device.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Device\NXAI.Device.Application\NXAI.Device.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Recipe\NXAI.Recipe.API\NXAI.Recipe.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Recipe\NXAI.Recipe.Application\NXAI.Recipe.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Cooking\NXAI.Cooking.API\NXAI.Cooking.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Cooking\NXAI.Cooking.Application\NXAI.Cooking.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Inventory\NXAI.Inventory.API\NXAI.Inventory.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Inventory\NXAI.Inventory.Application\NXAI.Inventory.Application.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Catalog\NXAI.Catalog.API\NXAI.Catalog.API.csproj" />
+    <ProjectReference Include="..\..\Modules\NXAI.Catalog\NXAI.Catalog.Application\NXAI.Catalog.Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.shared.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="NLog\nlog-console.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

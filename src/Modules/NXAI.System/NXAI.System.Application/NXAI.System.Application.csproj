@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Infrastructures\NXAI.Infra.Helper\NXAI.Infra.Helper.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructures\NXAI.Infra.IdGenerater\NXAI.Infra.IdGenerater.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructures\NXAI.Infra.Redis.Caching\NXAI.Infra.Redis.Caching.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructures\NXAI.Infra.Redis\NXAI.Infra.Redis.csproj" />
+    <ProjectReference Include="..\..\..\Shared\NXAI.Shared.Application\NXAI.Shared.Application.csproj" />
+    <ProjectReference Include="..\NXAI.System.Application.Contracts\NXAI.System.Application.Contracts.csproj" />
+    <ProjectReference Include="..\NXAI.System.Repository\NXAI.System.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

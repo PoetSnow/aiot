@@ -1,0 +1,11 @@
+global using System.IdentityModel.Tokens.Jwt;
+global using NXAI.System.Application.Contracts.Interfaces;
+global using NXAI.Shared;
+global using NXAI.Shared.Application.Contracts.Dtos;
+global using NXAI.Shared.WebApi;
+global using NXAI.Shared.WebApi.Authentication.Bearer;
+global using NXAI.Shared.WebApi.Authorization;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.Extensions.Options;
+global using Microsoft.AspNetCore.Http;

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Shared\NXAI.Shared.Application\NXAI.Shared.Application.csproj" />
+    <ProjectReference Include="..\NXAI.Member.Application.Contracts\NXAI.Member.Application.Contracts.csproj" />
+    <ProjectReference Include="..\NXAI.Member.Repository\NXAI.Member.Repository.csproj" />
+  </ItemGroup>
+</Project>
