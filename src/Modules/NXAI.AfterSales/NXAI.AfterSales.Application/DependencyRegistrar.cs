@@ -1,12 +1,14 @@
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NXAI.AfterSales.Repository;
+using NXAI.Infra.IdGenerater.Yitter;
 using NXAI.Shared;
 using NXAI.Shared.Application.Registrar;
-using NXAI.AfterSales.Repository;
 
 namespace NXAI.AfterSales.Application;
 
+/// <summary>售后模块 DI。不发 MQTT，不直接改 ast_sn。</summary>
 public sealed class DependencyRegistrar(IServiceCollection services, IServiceInfo serviceInfo, IConfiguration configuration, ServiceLifetime lifetime = ServiceLifetime.Scoped)
     : AbstractApplicationDependencyRegistrar(services, serviceInfo, configuration, lifetime)
 {
@@ -16,6 +18,26 @@ public sealed class DependencyRegistrar(IServiceCollection services, IServiceInf
 
     public override void AddApplicationServices()
     {
-        // Step 1 shell: no DbContext so Host can start without MySQL.
+        EnsureWorkerId();
+        AddOperater(services);
+        AddModuleMySqlDbContext<AfterSalesDbContext, EntityInfo>(registerDefaultUnitOfWork: true);
+        services.AddScoped<Contracts.Interfaces.ITicketService, Services.TicketService>();
+        services.AddHostedService<AfterSalesSchemaHostedService>();
+    }
+
+    private static void EnsureWorkerId()
+    {
+        if (IdGenerater.CurrentWorkerId >= 0)
+        {
+            return;
+        }
+
+        try
+        {
+            IdGenerater.SetWorkerId(1);
+        }
+        catch (InvalidOperationException)
+        {
+        }
     }
 }

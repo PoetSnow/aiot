@@ -1,0 +1,79 @@
+---
+description: NXAI C# 命名、格式与 XML 注释。写实体、DTO、Controller、Service 时必须遵守，保证 Swagger 有中文说明。
+globs: **/*.cs
+alwaysApply: false
+---
+
+# C# 命名、格式、XML 注释
+
+标识符用英文。XML / `//` 说明用中文。抄 `NXAI.System`，不要另起一套。
+
+`Directory.Build.props` 已开 `GenerateDocumentationFile`，但 `1591` 被忽略。**缺注释仍必须补**，否则 Swagger 只有类型名。
+
+## 命名
+
+| 种类 | 规则 | 例 |
+|---|---|---|
+| 项目 / 命名空间 | `NXAI.{模块}.{层}` | `NXAI.Member.Application.Contracts.Dtos` |
+| 实体 | 单数 PascalCase，不写 `Entity` 后缀 | `Member`、`User` |
+| 表名 | 模块前缀 + 蛇形，只在 `EntityInfo` 里映射 | `mb_member`、`sys_user` |
+| DTO | 业务名 + 用途 + `Dto` | `MemberLoginDto`、`UserTokenInfoDto` |
+| 接口 | `I` + 名词 + `Service` / `Store` | `IMemberService` |
+| 实现 | 去 `I` | `MemberService` |
+| Controller | 名词 + `Controller`，一端一个面 | `MemberAuthController` : `PortalApiController` |
+| 方法 | 动词 PascalCase；异步加 `Async` | `LoginByMobileAsync` |
+| 局部函数 | 动词 PascalCase | `OpenSession` |
+| 常量 / 状态 | PascalCase | `MemberStatus.Normal` |
+| 私有字段 | `_camelCase` | `_sessions` |
+
+禁止：`tbl_` 前缀、中文标识符、`Data`/`Info`/`Model` 当万能后缀、`sys_user.Id` 写入 `MemberId`。
+
+## 格式
+
+- 4 空格；文件顶 `namespace A.B;`（新代码）。
+- 公开成员顺序：常量 → 字段 → 构造 → 公有方法 → 私有方法。
+- 能主键构造就主键构造。`async` 方法必须 `await`。
+- 一行只做一件事。LINQ / 卫语句保持短。
+
+## 必须写 XML 的类型（Swagger 要吃这些）
+
+下列 **public** 类型和成员一律 `/// <summary>`，属性再写一行，方法补 `<param>` / `<returns>`：
+
+- `*.API` Controller 类与每个 action
+- `*.Application.Contracts` 里的 DTO、接口、枚举
+- `*.Repository` 实体与状态常量
+- Application 对外 Service 方法（契约接口上写，实现可省略重复长文）
+
+```csharp
+/// <summary>会员登录参数。</summary>
+public class MemberLoginDto : InputDto
+{
+    /// <summary>11 位手机号。</summary>
+    public string Mobile { get; set; } = string.Empty;
+}
+
+/// <summary>会员登录。</summary>
+/// <param name="input">手机号与短信验证码。</param>
+/// <returns>访问令牌与刷新令牌。</returns>
+[HttpPost("session")]
+public async Task<ActionResult<MemberTokenDto>> LoginAsync([FromBody] MemberLoginDto input)
+```
+
+XML 写业务含义，不要复述标识符（避免「获取 GetProfile」）。
+
+## 行内 / 局部也要注释
+
+这些地方用一行 `//` 或 `///`，写 **为什么**，不写「把 x 赋给 y」：
+
+- 局部函数、非显而易见的 `private` 方法
+- 魔数、状态分支、Id 号段、鉴权 / 隔离 / 和硬件相关的判断
+- 回头看 10 秒不懂的表达式
+
+```csharp
+// 会员 Id 与 sys_user 不是同一空间，禁止拿员工 Id 写入 MemberId
+member.Id = IdGenerater.GetNextId();
+```
+
+## Swagger 检查
+
+改完 API / DTO 后打开对应端文档：接口名、参数、字段说明应是中文 summary，不能只有 `MemberLoginDto`。模块 XML 已由 Host `IncludeXmlComments` 加载；新模块只要按上表写注释即可。

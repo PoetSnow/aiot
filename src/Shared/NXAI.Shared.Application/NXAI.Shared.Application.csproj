@@ -14,6 +14,7 @@
 	  <PackageReference Include="Microsoft.Extensions.Http.Polly" />
 	  <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
 	  <PackageReference Include="DotNetCore.CAP.RabbitMQ" />
+	  <PackageReference Include="DotNetCore.CAP.MySql" />
 	  <PackageReference Include="EFCore.NamingConventions" />
 	  <PackageReference Include="AutoMapper" />
 	  <PackageReference Include="FluentValidation" />

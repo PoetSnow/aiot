@@ -33,6 +33,20 @@ public static class ServiceCollectionExtension
         ArgumentNullException.ThrowIfNull(capSubscribes, nameof(capSubscribes));
         ArgumentNullException.ThrowIfNull(setupAction, nameof(setupAction));
 
+        // 后续模块仍要把自己的 ICapSubscribe 挂上，否则只有第一个调用方的订阅生效
+        foreach (var subScriber in capSubscribes)
+        {
+            if (!subScriber.IsAssignableTo(typeof(ICapSubscribe)))
+            {
+                throw new InvalidDataException("invalid data type");
+            }
+
+            if (services.All(d => d.ServiceType != subScriber))
+            {
+                services.Add(new ServiceDescriptor(subScriber, subScriber, serviceLifetime));
+            }
+        }
+
         if (services.HasRegistered(nameof(AddAdncInfraCap)))
         {
             return services;
@@ -45,22 +59,9 @@ public static class ServiceCollectionExtension
             services.AddSkyApmExtensions().AddCap();
         }
 
-        foreach (var subScriber in capSubscribes)
-        {
-            if (subScriber.IsAssignableTo(typeof(ICapSubscribe)))
-            {
-                services.Add(new ServiceDescriptor(subScriber, subScriber, serviceLifetime));
-            }
-            else
-            {
-                throw new InvalidDataException("invalid data type");
-            }
-        }
-
-        services
-            .AddSingleton<IEventPublisher, CapPublisher>()
-            .AddCap(setupAction)
-            .AddSubscribeFilter<TSubscribeFilter>();
+        // ICapPublisher 是 Scoped，发布器必须同生命周期才能加入当前库事务
+        services.Add(new ServiceDescriptor(typeof(IEventPublisher), typeof(CapPublisher), serviceLifetime));
+        services.AddCap(setupAction).AddSubscribeFilter<TSubscribeFilter>();
 
         return services;
     }

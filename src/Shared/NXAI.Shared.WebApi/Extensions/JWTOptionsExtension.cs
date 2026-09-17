@@ -14,6 +14,13 @@ public static class JWTOptionsExtension
             IssuerSigningKey = new SymmetricSecurityKey(tokenConfig.Encoding.GetBytes(tokenConfig.SymmetricSecurityKey)),
             ValidateAudience = tokenConfig.ValidateAudience,
             ValidAudience = tokenConfig.ValidAudience,
+            ValidAudiences = new[]
+            {
+                tokenConfig.ValidAudience,
+                tokenConfig.RefreshTokenAudience,
+                Routing.ApiSurfaces.ConsoleGroup,
+                Routing.ApiSurfaces.PortalGroup
+            }.Where(static x => !string.IsNullOrWhiteSpace(x)).Distinct(StringComparer.Ordinal).ToArray(),
             ValidateLifetime = tokenConfig.ValidateLifetime,
             RequireExpirationTime = tokenConfig.RequireExpirationTime,
             ClockSkew = TimeSpan.FromSeconds(tokenConfig.ClockSkew),

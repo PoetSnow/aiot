@@ -1,6 +1,7 @@
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NXAI.Infra.IdGenerater.Yitter;
 using NXAI.Shared;
 using NXAI.Shared.Application.Registrar;
 using NXAI.Member.Repository;
@@ -16,6 +17,27 @@ public sealed class DependencyRegistrar(IServiceCollection services, IServiceInf
 
     public override void AddApplicationServices()
     {
-        // Step 1 shell: no DbContext so Host can start without MySQL.
+        EnsureWorkerId();
+        AddOperater(services);
+        AddModuleMySqlDbContext<MemberDbContext, EntityInfo>(registerDefaultUnitOfWork: true);
+        services.AddSingleton<Stores.InMemoryMemberSessionStore>();
+        services.AddScoped<Contracts.Interfaces.IMemberService, Services.MemberService>();
+        services.AddHostedService<MemberSchemaHostedService>();
+    }
+
+    private static void EnsureWorkerId()
+    {
+        if (IdGenerater.CurrentWorkerId >= 0)
+        {
+            return;
+        }
+
+        try
+        {
+            IdGenerater.SetWorkerId(1);
+        }
+        catch (InvalidOperationException)
+        {
+        }
     }
 }

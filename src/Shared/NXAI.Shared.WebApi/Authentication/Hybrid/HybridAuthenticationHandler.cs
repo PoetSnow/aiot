@@ -31,7 +31,13 @@ public sealed class HybridAuthenticationHandler(IOptionsMonitor<HybridSchemeOpti
 
         if (endpoint.Metadata.GetMetadata<IAllowAnonymous>() is not null)
         {
-            return await Task.FromResult(AuthenticateResult.NoResult());
+            var anonymousHeader = Request.Headers.Authorization.ToString();
+            if (anonymousHeader.IsNullOrWhiteSpace())
+            {
+                return await Task.FromResult(AuthenticateResult.NoResult());
+            }
+
+            return await Context.AuthenticateAsync(anonymousHeader.Split(" ")[0]);
         }
 
         var authHeader = Request.Headers.Authorization.ToString();

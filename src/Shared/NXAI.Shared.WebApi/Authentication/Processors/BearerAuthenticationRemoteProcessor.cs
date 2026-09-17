@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,7 +9,7 @@ namespace NXAI.Shared.WebApi.Authentication.Processors;
 public class BearerAuthenticationRemoteProcessor(IHttpContextAccessor contextAccessor, IAuthRestClient authRestClient, ILogger<BearerAuthenticationRemoteProcessor> logger)
     : AbstractAuthenticationProcessor
 {
-    protected override async Task<(string? ValidationVersion, bool Status)> GetValidatedInfoAsync(long userId)
+    protected override async Task<(string? ValidationVersion, bool Status)> GetValidatedInfoAsync(long userId, ClaimsPrincipal claimsPrincipal)
     {
         var userContext = contextAccessor?.HttpContext?.RequestServices.GetService<UserContext>();
         if (userContext is null)

@@ -1,4 +1,5 @@
 using DotNetCore.CAP;
+using NXAI.Infra.EventBus;
 
 namespace NXAI.Infra.EventBus.Cap;
 

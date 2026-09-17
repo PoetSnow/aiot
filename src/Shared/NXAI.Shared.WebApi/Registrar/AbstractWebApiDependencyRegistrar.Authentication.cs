@@ -80,6 +80,9 @@ public abstract partial class AbstractWebApiDependencyRegistrar
                             userContext.Account = claims.First(x => x.Type == JwtRegisteredClaimNames.UniqueName).Value;
                             userContext.Name = claims.First(x => x.Type == JwtRegisteredClaimNames.Name).Value;
                             userContext.RoleIds = claims.First(x => x.Type == "roleids").Value;
+                            userContext.TokenType = BearerDefaults.NormalizeTokenType(
+                                claims.FirstOrDefault(x => x.Type == BearerDefaults.TokenType)?.Value
+                                ?? claims.FirstOrDefault(x => x.Type == BearerDefaults.LoginerType)?.Value);
                             var remoteIpAddress = context.HttpContext.Connection.RemoteIpAddress;
                             userContext.RemoteIpAddress = remoteIpAddress is null ? string.Empty : remoteIpAddress.MapToIPv4().ToString();
                         }

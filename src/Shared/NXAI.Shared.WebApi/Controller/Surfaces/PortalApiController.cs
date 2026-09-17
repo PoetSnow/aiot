@@ -2,9 +2,7 @@ using NXAI.Shared.WebApi.Routing;
 
 namespace Microsoft.AspNetCore.Mvc;
 
-/// <summary>
-/// Base controller for mini-program APIs (<c>api/portal/...</c>).
-/// </summary>
+/// <summary>小程序 API 基类，路由 <c>api/portal/...</c>。</summary>
 [ApiController]
 [ApiExplorerSettings(GroupName = ApiSurfaces.PortalGroup)]
 [Route(ApiSurfaces.PortalRouteTemplate)]

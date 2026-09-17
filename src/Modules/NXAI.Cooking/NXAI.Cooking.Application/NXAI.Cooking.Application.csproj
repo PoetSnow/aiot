@@ -5,7 +5,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="DotNetCore.CAP" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Shared\NXAI.Shared.Application\NXAI.Shared.Application.csproj" />
+    <ProjectReference Include="..\..\..\Shared\NXAI.Shared.Pot\NXAI.Shared.Pot.csproj" />
+    <ProjectReference Include="..\..\NXAI.Device\NXAI.Device.Application.Contracts\NXAI.Device.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\NXAI.Inventory\NXAI.Inventory.Application.Contracts\NXAI.Inventory.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\NXAI.Recipe\NXAI.Recipe.Application.Contracts\NXAI.Recipe.Application.Contracts.csproj" />
     <ProjectReference Include="..\NXAI.Cooking.Application.Contracts\NXAI.Cooking.Application.Contracts.csproj" />
     <ProjectReference Include="..\NXAI.Cooking.Repository\NXAI.Cooking.Repository.csproj" />
   </ItemGroup>

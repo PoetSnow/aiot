@@ -25,7 +25,7 @@ public abstract class AbstractAuthenticationProcessor
             throw new InvalidCastException(nameof(idClaim.Value));
         }
 
-        var (ValidationVersion, Status) = await GetValidatedInfoAsync(userId);
+        var (ValidationVersion, Status) = await GetValidatedInfoAsync(userId, claimsPrincipal);
 
         if (string.IsNullOrWhiteSpace(ValidationVersion) || Status == false)
         {
@@ -46,5 +46,5 @@ public abstract class AbstractAuthenticationProcessor
         return claims.ToArray();
     }
 
-    protected abstract Task<(string? ValidationVersion, bool Status)> GetValidatedInfoAsync(long userId);
+    protected abstract Task<(string? ValidationVersion, bool Status)> GetValidatedInfoAsync(long userId, ClaimsPrincipal claimsPrincipal);
 }

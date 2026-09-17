@@ -54,7 +54,7 @@ public abstract class AbstractPermissionHandler : AuthorizationHandler<Permissio
         // for cap end
         if (codes is null || codes.Length == 0)
         {
-            context.Fail();
+            context.Succeed(requirement);
             return;
         }
         else

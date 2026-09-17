@@ -15,5 +15,6 @@ namespace NXAI.Shared
         public string RoleIds { get; set; } = string.Empty;
         public string Device { get; set; } = string.Empty;
         public string RemoteIpAddress { get; set; } = string.Empty;
+        public string TokenType { get; set; } = string.Empty;
     }
 }

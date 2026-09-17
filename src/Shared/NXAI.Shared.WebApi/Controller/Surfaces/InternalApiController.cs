@@ -3,9 +3,7 @@ using NXAI.Shared.WebApi.Routing;
 
 namespace Microsoft.AspNetCore.Mvc;
 
-/// <summary>
-/// Base controller for internal debug APIs (<c>api/internal/...</c>). Register controllers only in Development when possible.
-/// </summary>
+/// <summary>内部调试 API 基类，路由 <c>api/internal/...</c>。尽量只在开发环境注册。</summary>
 [ApiController]
 [ApiExplorerSettings(GroupName = ApiSurfaces.InternalGroup)]
 [Route(ApiSurfaces.InternalRouteTemplate)]

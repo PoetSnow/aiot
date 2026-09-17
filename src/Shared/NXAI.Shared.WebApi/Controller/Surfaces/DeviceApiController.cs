@@ -4,10 +4,7 @@ using NXAI.Shared.WebApi.Routing;
 
 namespace Microsoft.AspNetCore.Mvc;
 
-/// <summary>
-/// Base controller for device / IoT APIs (<c>api/device/...</c>).
-/// 设备域使用 <c>X-Device-Token</c> + <see cref="DeviceTokenMiddleware"/> 鉴权，不走 JWT。
-/// </summary>
+/// <summary>设备端 API 基类，路由 <c>api/device/...</c>。鉴权用 <c>X-Device-Token</c>，不走 JWT。</summary>
 [ApiController]
 [ApiExplorerSettings(GroupName = ApiSurfaces.DeviceGroup)]
 [Route(ApiSurfaces.DeviceRouteTemplate)]

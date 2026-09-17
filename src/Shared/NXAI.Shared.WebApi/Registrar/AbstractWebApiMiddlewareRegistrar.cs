@@ -123,6 +123,7 @@ public abstract partial class AbstractWebApiMiddlewareRegistrar(WebApplication a
 
         beforeAuthentication?.Invoke(App);
         App.UseAuthentication();
+        App.UseMiddleware<ApiSurfaceTokenMiddleware>();
         afterAuthentication?.Invoke(App);
         App.UseAuthorization();
         afterAuthorization?.Invoke(App);

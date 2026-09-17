@@ -63,6 +63,7 @@
     <PackageVersion Include="DotNetCore.CAP.MySql" Version="8.3.3" />
     <PackageVersion Include="DotNetCore.CAP.SqlServer" Version="8.3.3" />
     <PackageVersion Include="DotNetCore.CAP.Dashboard.K8s" Version="8.3.3" />
+    <PackageVersion Include="MQTTnet" Version="4.3.7.1207" />
     <PackageVersion Include="Yitter.IdGenerator" Version="1.0.14" />
     <PackageVersion Include="Castle.Core.AsyncInterceptor" Version="2.1.0" />
     <PackageVersion Include="StackExchange.Redis" Version="2.8.24" />

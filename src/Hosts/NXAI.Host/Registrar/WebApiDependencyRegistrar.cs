@@ -23,7 +23,7 @@ public sealed class WebApiDependencyRegistrar(IServiceCollection services, IServ
 
     public override void AddAdncServices()
     {
-        AddWebApiDefaultServices<DeferredAuthenticationProcessor, DeferredPermissionHandler>();
+        AddWebApiDefaultServices<SurfaceAwareAuthenticationProcessor, DeferredPermissionHandler>();
         services.AddScoped<UserContext>();
         services.AddSingleton<IServiceInfo>(serviceInfo);
         services.AddNXAIApplicationModules(
