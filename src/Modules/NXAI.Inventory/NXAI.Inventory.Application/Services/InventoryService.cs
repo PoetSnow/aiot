@@ -1,9 +1,8 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
-using NXAI.Device.Application.Contracts.Dtos;
-using NXAI.Device.Application.Contracts.Interfaces;
 using NXAI.Infra.IdGenerater.Yitter;
 using NXAI.Infra.Repository;
+using NXAI.Inventory.Application.Acl;
 using NXAI.Inventory.Application.Contracts.Dtos;
 using NXAI.Inventory.Application.Contracts.Interfaces;
 using NXAI.Shared.Application.Contracts.Dtos;
@@ -16,7 +15,7 @@ namespace NXAI.Inventory.Application.Services;
 /// <summary>耗材实例。实现见 <see cref="IInventoryService"/>。</summary>
 public sealed class InventoryService(
     IEfRepository<ConsumableEntity> consumables,
-    IDeviceService devices) : IInventoryService
+    IDeviceSlotGateway slots) : IInventoryService
 {
     public async Task<ServiceResult<IdDto>> CreateAsync(long memberId, ConsumableCreationDto input)
     {
@@ -63,11 +62,7 @@ public sealed class InventoryService(
             return new ProblemDetails(HttpStatusCode.BadRequest, "设备与仓位不能为空");
         }
 
-        var bind = await devices.BindSlotAsync(input.DeviceId, slot, memberId, new DeviceSlotBindingDto
-        {
-            ConsumableId = entity.Id,
-            MaterialCode = entity.ConsumableTypeCode
-        });
+        var bind = await slots.BindAsync(input.DeviceId, slot, memberId, entity.Id, entity.ConsumableTypeCode);
         if (!bind.IsSuccess)
         {
             return bind;

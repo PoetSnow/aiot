@@ -1,9 +1,8 @@
 using System.Net;
 using Microsoft.EntityFrameworkCore;
+using NXAI.AfterSales.Application.Acl;
 using NXAI.AfterSales.Application.Contracts.Dtos;
 using NXAI.AfterSales.Application.Contracts.Interfaces;
-using NXAI.Asset.Application.Contracts.Interfaces;
-using NXAI.Device.Application.Contracts.Interfaces;
 using NXAI.Infra.IdGenerater.Yitter;
 using NXAI.Infra.Repository;
 using NXAI.Shared.Application.Contracts.Dtos;
@@ -19,9 +18,9 @@ namespace NXAI.AfterSales.Application.Services;
 public sealed class TicketService(
     IEfRepository<TicketEntity> tickets,
     IEfRepository<TicketLogEntity> logs,
-    IAssetSnService assetSns,
-    IDeviceModelService models,
-    IDeviceService devices) : ITicketService
+    IAssetSnGateway assetSns,
+    IDeviceGateway devices,
+    IMemberGateway members) : ITicketService
 {
     public Task<ServiceResult<IdDto>> CreateByStaffAsync(long staffId, TicketCreationDto input)
         => CreateAsync(staffId, memberId: null, input);
@@ -86,14 +85,19 @@ public sealed class TicketService(
             return new ProblemDetails(HttpStatusCode.BadRequest, "SN 不能为空");
         }
 
-        var asset = await assetSns.GetBySnAsync(sn);
+        var asset = await assetSns.GetAsync(sn);
         if (asset is null)
         {
             return new ProblemDetails(HttpStatusCode.NotFound, "SN 不存在");
         }
 
-        var bound = await devices.GetBySnAsync(sn);
-        var warranty = await IsWarrantyValidAsync(asset.ModelCode, asset.OutboundAt);
+        if (memberId is > 0 && !await members.ExistsActiveAsync(memberId.Value))
+        {
+            return new ProblemDetails(HttpStatusCode.Forbidden, "会员不存在或已注销");
+        }
+
+        var deviceId = await devices.GetIdBySnAsync(sn);
+        var warranty = await assetSns.IsWarrantyValidAsync(asset.ModelCode, asset.OutboundAt);
         var id = IdGenerater.GetNextId();
         var entity = new TicketEntity
         {
@@ -101,7 +105,7 @@ public sealed class TicketService(
             TicketNo = $"AFS{id}",
             Sn = sn,
             MemberId = memberId ?? asset.MemberId,
-            DeviceId = bound?.Id,
+            DeviceId = deviceId,
             Type = input.Type,
             Status = TicketStatus.Opened,
             WarrantyValid = warranty,
@@ -112,24 +116,12 @@ public sealed class TicketService(
 
         if (input.Type == TicketType.Repair)
         {
-            // 经 Asset 契约改 SN 状态，禁止本模块 UPDATE ast_sn
+            // 经 Asset Gateway 改 SN 状态，禁止本模块 UPDATE ast_sn
             await assetSns.MarkRepairingAsync(sn);
             await devices.UnbindBySnAsync(sn);
         }
 
         return new IdDto(id);
-    }
-
-    private async Task<bool> IsWarrantyValidAsync(string modelCode, DateTime? outboundAt)
-    {
-        if (outboundAt is null)
-        {
-            return false;
-        }
-
-        var model = await models.GetByCodeAsync(modelCode);
-        var months = model?.WarrantyMonths ?? 12;
-        return outboundAt.Value.AddMonths(months) >= DateTime.Now;
     }
 
     private Task AddLogAsync(long ticketId, string action, string remark, long staffId)

@@ -1,17 +1,13 @@
 using System.Net;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using NXAI.Cooking.Application.Acl;
 using NXAI.Cooking.Application.Contracts.Dtos;
 using NXAI.Cooking.Application.Contracts.Events;
 using NXAI.Cooking.Application.Contracts.Interfaces;
-using NXAI.Device.Application.Contracts.Dtos;
-using NXAI.Device.Application.Contracts.Interfaces;
 using NXAI.Infra.EventBus;
 using NXAI.Infra.IdGenerater.Yitter;
 using NXAI.Infra.Repository;
-using NXAI.Inventory.Application.Contracts.Interfaces;
-using NXAI.Recipe.Application.Contracts.Dtos;
-using NXAI.Recipe.Application.Contracts.Interfaces;
 using NXAI.Shared.Application.Contracts.ResultModels;
 using NXAI.Shared.Pot;
 using NXAI.Shared.Pot.Enums;
@@ -31,9 +27,9 @@ public sealed class CookingService(
     IEfRepository<CookingTaskStepEntity> steps,
     IEfRepository<CookingCommandEntity> commands,
     IEfRepository<CookingExecutionLogEntity> logs,
-    IRecipeService recipes,
-    IDeviceService devices,
-    IInventoryService inventory,
+    IRecipeGateway recipes,
+    IDeviceGateway devices,
+    IInventoryGateway inventory,
     IEventPublisher events) : ICookingService
 {
     private static readonly HashSet<string> TerminalOk = ["SUCCESS"];
@@ -58,8 +54,7 @@ public sealed class CookingService(
             return new ProblemDetails(HttpStatusCode.Conflict, "设备已有未结束任务");
         }
 
-        var shadow = await devices.GetShadowAsync(device.Id, memberId);
-        if (shadow is null || !shadow.Online)
+        if (!await devices.IsOnlineAsync(device.Id, memberId))
         {
             return new ProblemDetails(HttpStatusCode.Conflict, "设备离线，不能启动");
         }
@@ -328,7 +323,7 @@ public sealed class CookingService(
         await events.PublishAsync(CookingTaskFailedEvent.Topic, new CookingTaskFailedEvent { TaskId = task.Id, Reason = reason });
     }
 
-    private async Task<ServiceResult<CookingTaskDto>> RejectAsync(long memberId, long deviceId, RecipeDto recipe, string reason)
+    private async Task<ServiceResult<CookingTaskDto>> RejectAsync(long memberId, long deviceId, CookingRecipeSnapshot recipe, string reason)
     {
         var entity = new CookingTaskEntity
         {
@@ -354,7 +349,7 @@ public sealed class CookingService(
         };
     }
 
-    private async Task IssueStepAsync(CookingTaskEntity task, CookingTaskStepEntity step, DeviceDto device)
+    private async Task IssueStepAsync(CookingTaskEntity task, CookingTaskStepEntity step, CookingDeviceInfo device)
     {
         var commandId = IdGenerater.GetNextId();
         var seq = 1;
@@ -417,14 +412,10 @@ public sealed class CookingService(
         step.CommandId = commandId;
         await steps.UpdateAsync(step);
 
-        await devices.IssueCommandAsync(task.DeviceId, new DeviceCommandIssueDto
-        {
-            CommandId = commandId,
-            PayloadJson = PotJson.Serialize(envelope)
-        });
+        await devices.IssueCommandAsync(task.DeviceId, commandId, PotJson.Serialize(envelope));
     }
 
-    private async Task IssueStopAsync(CookingTaskEntity task, DeviceDto device)
+    private async Task IssueStopAsync(CookingTaskEntity task, CookingDeviceInfo device)
     {
         var commandId = IdGenerater.GetNextId();
         var envelope = new PotMqttEnvelope<PotCommandPayload>
@@ -447,11 +438,7 @@ public sealed class CookingService(
                 ExpireAt = DateTimeOffset.UtcNow.AddSeconds(60).ToUnixTimeSeconds()
             }
         };
-        await devices.IssueCommandAsync(task.DeviceId, new DeviceCommandIssueDto
-        {
-            CommandId = commandId,
-            PayloadJson = PotJson.Serialize(envelope)
-        });
+        await devices.IssueCommandAsync(task.DeviceId, commandId, PotJson.Serialize(envelope));
     }
 
     private static bool IsModelCompatible(string compatible, string modelCode)

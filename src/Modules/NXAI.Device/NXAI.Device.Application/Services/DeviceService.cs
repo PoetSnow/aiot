@@ -31,7 +31,7 @@ public sealed class DeviceService(
     IEfRepository<DeviceMqttOutboxEntity> outbox,
     IAssetSnGateway assetSns,
     IMemberGateway members,
-    IInventoryQuery inventory,
+    IInventoryGateway inventory,
     IEventPublisher events) : IDeviceService
 {
     public async Task<ServiceResult<IdDto>> BindAsync(long memberId, DeviceBindDto input)

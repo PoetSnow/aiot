@@ -22,6 +22,9 @@ public sealed class DependencyRegistrar(IServiceCollection services, IServiceInf
         AddOperater(services);
         AddModuleMySqlDbContext<CookingDbContext, EntityInfo>(registerDefaultUnitOfWork: true);
         AddCapEventBus([typeof(Subscribers.DeviceAckSubscriber)]);
+        services.AddScoped<Acl.IRecipeGateway, Acl.RecipeGateway>();
+        services.AddScoped<Acl.IDeviceGateway, Acl.DeviceGateway>();
+        services.AddScoped<Acl.IInventoryGateway, Acl.InventoryGateway>();
         services.AddScoped<Contracts.Interfaces.ICookingService, Services.CookingService>();
         services.AddHostedService<CookingSchemaHostedService>();
         services.AddHostedService<CookingWatchdogHostedService>();

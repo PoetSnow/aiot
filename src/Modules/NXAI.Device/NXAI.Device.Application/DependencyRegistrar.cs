@@ -23,7 +23,7 @@ public sealed class DependencyRegistrar(IServiceCollection services, IServiceInf
         AddModuleMySqlDbContext<DeviceDbContext, EntityInfo>(registerDefaultUnitOfWork: true);
         services.AddScoped<Acl.IAssetSnGateway, Acl.AssetSnGateway>();
         services.AddScoped<Acl.IMemberGateway, Acl.MemberGateway>();
-        services.AddScoped<Contracts.Interfaces.IInventoryQuery, Acl.DeferredInventoryQuery>();
+        services.AddScoped<Acl.IInventoryGateway, Acl.InventoryGateway>();
         services.AddSingleton<Contracts.Interfaces.ITelemetryStore, Stores.RelationalTelemetryStore>();
         services.AddScoped<Contracts.Interfaces.IDeviceService, Services.DeviceService>();
         services.AddHostedService<DeviceSchemaHostedService>();

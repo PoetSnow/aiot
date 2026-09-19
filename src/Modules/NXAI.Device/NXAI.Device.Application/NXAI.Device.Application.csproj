@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\..\Shared\NXAI.Shared.Pot\NXAI.Shared.Pot.csproj" />
     <ProjectReference Include="..\..\NXAI.Asset\NXAI.Asset.Application.Contracts\NXAI.Asset.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\NXAI.Member\NXAI.Member.Application.Contracts\NXAI.Member.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\NXAI.Inventory\NXAI.Inventory.Application.Contracts\NXAI.Inventory.Application.Contracts.csproj" />
     <ProjectReference Include="..\NXAI.Device.Application.Contracts\NXAI.Device.Application.Contracts.csproj" />
     <ProjectReference Include="..\NXAI.Device.Repository\NXAI.Device.Repository.csproj" />
   </ItemGroup>

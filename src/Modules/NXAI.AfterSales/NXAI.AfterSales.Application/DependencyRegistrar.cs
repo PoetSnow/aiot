@@ -21,6 +21,9 @@ public sealed class DependencyRegistrar(IServiceCollection services, IServiceInf
         EnsureWorkerId();
         AddOperater(services);
         AddModuleMySqlDbContext<AfterSalesDbContext, EntityInfo>(registerDefaultUnitOfWork: true);
+        services.AddScoped<Acl.IAssetSnGateway, Acl.AssetSnGateway>();
+        services.AddScoped<Acl.IDeviceGateway, Acl.DeviceGateway>();
+        services.AddScoped<Acl.IMemberGateway, Acl.MemberGateway>();
         services.AddScoped<Contracts.Interfaces.ITicketService, Services.TicketService>();
         services.AddHostedService<AfterSalesSchemaHostedService>();
     }

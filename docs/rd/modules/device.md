@@ -57,7 +57,7 @@ Cooking **不**引用 MQTT。
 
 - `IAssetSnGateway`：绑定校验  
 - `IMemberGateway`：会员未注销  
-- `IInventoryQuery`：绑仓时耗材属于该会员  
+- `IInventoryGateway`：绑仓时耗材属于该会员  
 
 ## 事件
 

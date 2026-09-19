@@ -8,6 +8,7 @@
     <ProjectReference Include="..\..\..\Shared\NXAI.Shared.Application\NXAI.Shared.Application.csproj" />
     <ProjectReference Include="..\..\NXAI.Asset\NXAI.Asset.Application.Contracts\NXAI.Asset.Application.Contracts.csproj" />
     <ProjectReference Include="..\..\NXAI.Device\NXAI.Device.Application.Contracts\NXAI.Device.Application.Contracts.csproj" />
+    <ProjectReference Include="..\..\NXAI.Member\NXAI.Member.Application.Contracts\NXAI.Member.Application.Contracts.csproj" />
     <ProjectReference Include="..\NXAI.AfterSales.Application.Contracts\NXAI.AfterSales.Application.Contracts.csproj" />
     <ProjectReference Include="..\NXAI.AfterSales.Repository\NXAI.AfterSales.Repository.csproj" />
   </ItemGroup>
